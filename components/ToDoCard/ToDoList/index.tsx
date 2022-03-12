@@ -13,7 +13,7 @@ import { ListedItems } from "./List";
 export default function ToDoList() {
   const [checked, setChecked] = React.useState([0]);
 
-  const handleToggle = (value: number) => () => {
+  const handleToggle = (value: any) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -26,32 +26,51 @@ export default function ToDoList() {
     setChecked(newChecked);
   };
 
+  const deleteItem = (item: any) => () => {
+    delete item[0];
+  };
+
   return (
     <List sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}>
       {ListedItems.map((item) => {
-        const labelId = `checkbox-list-label-${item.name}`;
+        const labelId = `checkbox-list-label-${item}`;
 
         return (
           <ListItem
-            key={item.name}
+            key={item}
             secondaryAction={
-              <IconButton edge="end" aria-label="comments">
-                <DeleteIcon />
-                <EditIcon sx={{ marginLeft: "20px" }} />
-              </IconButton>
+              <>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() =>
+                    ListedItems.splice(ListedItems.indexOf(item), 1)
+                  }
+                >
+                  <DeleteIcon />
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  aria-label="edit"
+                  sx={{ marginLeft: "20px" }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </>
             }
             disablePadding
           >
-            <ListItemButton role={undefined} dense>
+            <ListItemButton dense>
               <ListItemIcon>
                 <Checkbox
                   edge="start"
                   tabIndex={-1}
+                  onChange={handleToggle(item)}
                   disableRipple
                   inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`${item.name}`} />
+              <ListItemText id={labelId} primary={`${item}`} />
             </ListItemButton>
           </ListItem>
         );
