@@ -5,27 +5,43 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import { ListedItems } from "../ToDoList/List";
 
 export default function InputField() {
+  const onClickCheck = () => {
+    const newItem = (document.getElementById("input") as HTMLInputElement)
+      .value;
+    ListedItems.push(newItem);
+  };
+
+  const onClickClear = () => {
+    (document.getElementById("input") as HTMLInputElement).value = "";
+  };
+
   return (
     <Paper
       component="form"
       sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 500 }}
     >
       <InputBase
+        id="input"
         sx={{ ml: 1, flex: 1 }}
         placeholder="Enter To-Do List"
-        inputProps={{ "aria-label": "search google maps" }}
       />
       <IconButton
         type="submit"
         sx={{ p: "10px", color: "green" }}
         aria-label="search"
+        onClick={onClickCheck}
       >
         <CheckIcon />
       </IconButton>
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-      <IconButton sx={{ p: "10px", color: "red" }} aria-label="directions">
+      <IconButton
+        sx={{ p: "10px", color: "red" }}
+        aria-label="directions"
+        onClick={onClickClear}
+      >
         <ClearIcon />
       </IconButton>
     </Paper>

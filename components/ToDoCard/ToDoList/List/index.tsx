@@ -1,5 +1,1 @@
-export const ListedItems = [
-  { name: "Go shopping" },
-  { name: "Call the doctor" },
-  { name: "Playing games" },
-];
+export const ListedItems = ["Go Shopping", "Playing games", "Buying groceries"];
