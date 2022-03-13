@@ -26,10 +26,6 @@ export default function ToDoList() {
     setChecked(newChecked);
   };
 
-  const deleteItem = (item: any) => () => {
-    delete item[0];
-  };
-
   return (
     <List sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}>
       {ListedItems.map((item) => {

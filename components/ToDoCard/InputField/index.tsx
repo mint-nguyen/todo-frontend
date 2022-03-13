@@ -8,6 +8,16 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { ListedItems } from "../ToDoList/List";
 
 export default function InputField() {
+  const onClickCheck = () => {
+    const newItem = (document.getElementById("input") as HTMLInputElement)
+      .value;
+    ListedItems.push(newItem);
+  };
+
+  const onClickClear = () => {
+    (document.getElementById("input") as HTMLInputElement).value = "";
+  };
+
   return (
     <Paper
       component="form"
@@ -22,12 +32,7 @@ export default function InputField() {
         type="submit"
         sx={{ p: "10px", color: "green" }}
         aria-label="search"
-        onClick={() => {
-          const newItem = (document.getElementById("input") as HTMLInputElement)
-            .value;
-          ListedItems.push(newItem);
-          console.log(ListedItems);
-        }}
+        onClick={onClickCheck}
       >
         <CheckIcon />
       </IconButton>
@@ -35,9 +40,7 @@ export default function InputField() {
       <IconButton
         sx={{ p: "10px", color: "red" }}
         aria-label="directions"
-        onClick={() => {
-          (document.getElementById("input") as HTMLInputElement).value = "";
-        }}
+        onClick={onClickClear}
       >
         <ClearIcon />
       </IconButton>
