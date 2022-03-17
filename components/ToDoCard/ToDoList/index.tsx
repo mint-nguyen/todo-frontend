@@ -8,10 +8,17 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { ListedItems } from "./List";
+import getAllItems from "./graphql";
+import { gql, useQuery } from "@apollo/client";
+import GET_ALL_ITEMS from "./graphql";
 
 export default function ToDoList() {
+  const { loading, error, data } = useQuery(GET_ALL_ITEMS);
   const [checked, setChecked] = React.useState([0]);
+
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
+  console.log(data);
 
   const handleToggle = (value: any) => () => {
     const currentIndex = checked.indexOf(value);
@@ -26,51 +33,53 @@ export default function ToDoList() {
     setChecked(newChecked);
   };
 
-  return (
-    <List sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}>
-      {ListedItems.map((item) => {
-        const labelId = `checkbox-list-label-${item}`;
-
-        return (
-          <ListItem
-            key={item}
-            secondaryAction={
-              <>
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() =>
-                    ListedItems.splice(ListedItems.indexOf(item), 1)
-                  }
-                >
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="edit"
-                  sx={{ marginLeft: "20px" }}
-                >
-                  <EditIcon />
-                </IconButton>
-              </>
-            }
-            disablePadding
-          >
-            <ListItemButton dense>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  tabIndex={-1}
-                  onChange={handleToggle(item)}
-                  disableRipple
-                  inputProps={{ "aria-labelledby": labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={`${item}`} />
-            </ListItemButton>
-          </ListItem>
-        );
-      })}
-    </List>
-  );
+  if (data) {
+    return (
+      <List sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}>
+        {data.todoItems.edges.map((item: any) => {
+          const labelId = `checkbox-list-label-${item.node.title}`;
+          console.log(item);
+          return (
+            <ListItem
+              key={item.node.id}
+              secondaryAction={
+                <>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    // onClick={() =>
+                    //   ListedItems.splice(ListedItems.indexOf(item), 1)
+                    // }
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    aria-label="edit"
+                    sx={{ marginLeft: "20px" }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </>
+              }
+              disablePadding
+            >
+              <ListItemButton dense>
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    tabIndex={-1}
+                    onChange={handleToggle(item)}
+                    disableRipple
+                    inputProps={{ "aria-labelledby": labelId }}
+                  />
+                </ListItemIcon>
+                <ListItemText id={labelId} primary={`${item.node.title}`} />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
+      </List>
+    );
+  }
 }

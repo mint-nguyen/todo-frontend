@@ -5,13 +5,15 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
-import { ListedItems } from "../ToDoList/List";
+// import getAllItems from "../ToDoList/graphql";
 
 export default function InputField() {
+  // const ListedItems = getAllItems();
+
   const onClickCheck = () => {
     const newItem = (document.getElementById("input") as HTMLInputElement)
       .value;
-    ListedItems.push(newItem);
+    // ListedItems.push(newItem);
   };
 
   const onClickClear = () => {
