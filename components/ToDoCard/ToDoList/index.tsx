@@ -8,8 +8,7 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import getAllItems from "./graphql";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import GET_ALL_ITEMS from "./graphql";
 
 export default function ToDoList() {
@@ -18,7 +17,6 @@ export default function ToDoList() {
 
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
-  console.log(data);
 
   const handleToggle = (value: any) => () => {
     const currentIndex = checked.indexOf(value);
@@ -44,13 +42,7 @@ export default function ToDoList() {
               key={item.node.id}
               secondaryAction={
                 <>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    // onClick={() =>
-                    //   ListedItems.splice(ListedItems.indexOf(item), 1)
-                    // }
-                  >
+                  <IconButton edge="end" aria-label="delete">
                     <DeleteIcon />
                   </IconButton>
                   <IconButton
