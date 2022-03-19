@@ -20,3 +20,12 @@ export const DELETE_ITEM = gql`
     }
   }
 `;
+
+export const EDIT_ITEM = gql`
+  mutation editItem($id: ID!, $title: String!) {
+    updateOneTodoItem(input: { id: $id, update: { title: $title } }) {
+      id
+      title
+    }
+  }
+`;
