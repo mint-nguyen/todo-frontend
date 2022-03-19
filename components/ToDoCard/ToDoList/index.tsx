@@ -8,10 +8,14 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useQuery } from "@apollo/client";
-import GET_ALL_ITEMS from "./graphql";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_ALL_ITEMS, DELETE_ITEM } from "./graphql";
 
 export default function ToDoList() {
+  const [deleteItem] = useMutation(DELETE_ITEM, {
+    refetchQueries: [GET_ALL_ITEMS, "getAllItemsSortID"],
+  });
+
   const { loading, error, data } = useQuery(GET_ALL_ITEMS);
   const [checked, setChecked] = React.useState([0]);
 
@@ -36,13 +40,19 @@ export default function ToDoList() {
       <List sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}>
         {data.todoItems.edges.map((item: any) => {
           const labelId = `checkbox-list-label-${item.node.title}`;
-          console.log(item);
+          const onClickDelete = () =>
+            deleteItem({ variables: { id: item.node.id } });
+          console.log(item.node.id);
           return (
             <ListItem
               key={item.node.id}
               secondaryAction={
                 <>
-                  <IconButton edge="end" aria-label="delete">
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={onClickDelete}
+                  >
                     <DeleteIcon />
                   </IconButton>
                   <IconButton

@@ -8,7 +8,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { useMutation } from "@apollo/client";
 import { CREATE_TO_DO } from "./graphql";
 import { useState } from "react";
-import GET_ALL_ITEMS from "../ToDoList/graphql";
+import { GET_ALL_ITEMS } from "../ToDoList/graphql";
 
 export default function InputField() {
   const [formState, setFormState] = useState({
