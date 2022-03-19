@@ -30,8 +30,14 @@ export default function InputField() {
   };
 
   const onClickClear = () => {
-    (document.getElementById("input") as HTMLInputElement).value = "";
+    setFormState({ title: "" });
   };
+
+  const onChange = (e: any) =>
+    setFormState({
+      ...formState,
+      title: e.target.value,
+    });
 
   return (
     <Paper
@@ -43,12 +49,7 @@ export default function InputField() {
         sx={{ ml: 1, flex: 1 }}
         placeholder="Enter To-Do List"
         value={formState.title}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            title: e.target.value,
-          })
-        }
+        onChange={onChange}
       />
       <IconButton
         type="submit"
