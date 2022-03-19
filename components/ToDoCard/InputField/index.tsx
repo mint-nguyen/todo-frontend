@@ -8,6 +8,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { useMutation } from "@apollo/client";
 import { CREATE_TO_DO } from "./graphql";
 import { useState } from "react";
+import GET_ALL_ITEMS from "../ToDoList/graphql";
 
 export default function InputField() {
   const [formState, setFormState] = useState({
@@ -16,6 +17,7 @@ export default function InputField() {
 
   const [addTodo, { data, loading, error }] = useMutation(CREATE_TO_DO, {
     variables: { title: formState.title },
+    refetchQueries: [GET_ALL_ITEMS, "getAllItemsSortID"],
   });
 
   if (loading) return "Submitting...";
@@ -24,7 +26,7 @@ export default function InputField() {
   const onClickCheck = (e: any) => {
     e.preventDefault();
     addTodo();
-    onClickClear();
+    setFormState({ title: "" });
   };
 
   const onClickClear = () => {
