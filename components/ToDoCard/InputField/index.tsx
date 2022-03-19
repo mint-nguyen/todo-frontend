@@ -20,13 +20,14 @@ export default function InputField() {
     refetchQueries: [GET_ALL_ITEMS, "getAllItemsSortID"],
   });
 
-  if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
 
   const onClickCheck = (e: any) => {
     e.preventDefault();
-    addTodo();
-    setFormState({ title: "" });
+    if (formState.title !== "") {
+      addTodo();
+      setFormState({ title: "" });
+    }
   };
 
   const onClickClear = () => {
