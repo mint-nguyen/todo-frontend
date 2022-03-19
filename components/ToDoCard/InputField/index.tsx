@@ -5,18 +5,40 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
-import { ListedItems } from "../ToDoList/List";
+import { useMutation } from "@apollo/client";
+import { CREATE_TO_DO } from "./graphql";
+import { useState } from "react";
+import GET_ALL_ITEMS from "../ToDoList/graphql";
 
 export default function InputField() {
-  const onClickCheck = () => {
-    const newItem = (document.getElementById("input") as HTMLInputElement)
-      .value;
-    ListedItems.push(newItem);
+  const [formState, setFormState] = useState({
+    title: "",
+  });
+
+  const [addTodo, { data, loading, error }] = useMutation(CREATE_TO_DO, {
+    variables: { title: formState.title },
+    refetchQueries: [GET_ALL_ITEMS, "getAllItemsSortID"],
+  });
+
+  if (error) return `Submission error! ${error.message}`;
+
+  const onClickCheck = (e: any) => {
+    e.preventDefault();
+    if (formState.title !== "") {
+      addTodo();
+      setFormState({ title: "" });
+    }
   };
 
   const onClickClear = () => {
-    (document.getElementById("input") as HTMLInputElement).value = "";
+    setFormState({ title: "" });
   };
+
+  const onChange = (e: any) =>
+    setFormState({
+      ...formState,
+      title: e.target.value,
+    });
 
   return (
     <Paper
@@ -27,6 +49,8 @@ export default function InputField() {
         id="input"
         sx={{ ml: 1, flex: 1 }}
         placeholder="Enter To-Do List"
+        value={formState.title}
+        onChange={onChange}
       />
       <IconButton
         type="submit"
