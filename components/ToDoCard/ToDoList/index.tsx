@@ -58,7 +58,6 @@ export default function ToDoList() {
 
           const onClickDelete = () =>
             deleteItem({ variables: { id: item.node.id } });
-          console.log(item.node.id);
 
           const onClickEdit = (e: any) => {
             e.preventDefault();
