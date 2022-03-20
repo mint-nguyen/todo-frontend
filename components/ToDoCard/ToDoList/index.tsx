@@ -8,10 +8,29 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useQuery } from "@apollo/client";
-import GET_ALL_ITEMS from "./graphql";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_ALL_ITEMS, DELETE_ITEM, EDIT_ITEM } from "./graphql";
+import { TextField } from "@mui/material";
 
 export default function ToDoList() {
+  const [form, setForm] = React.useState({
+    title: "",
+  });
+
+  const onChange = (e: any) =>
+    setForm({
+      ...form,
+      title: e.target.value,
+    });
+
+  const [editItem] = useMutation(EDIT_ITEM, {
+    refetchQueries: [GET_ALL_ITEMS, "getAllItemsSortID"],
+  });
+
+  const [deleteItem] = useMutation(DELETE_ITEM, {
+    refetchQueries: [GET_ALL_ITEMS, "getAllItemsSortID"],
+  });
+
   const { loading, error, data } = useQuery(GET_ALL_ITEMS);
   const [checked, setChecked] = React.useState([0]);
 
@@ -36,25 +55,39 @@ export default function ToDoList() {
       <List sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}>
         {data.todoItems.edges.map((item: any) => {
           const labelId = `checkbox-list-label-${item.node.title}`;
-          console.log(item);
+
+          const onClickDelete = () =>
+            deleteItem({ variables: { id: item.node.id } });
+
+          const onClickEdit = (e: any) => {
+            e.preventDefault();
+            if (form.title !== "") {
+              editItem({ variables: { id: item.node.id, title: form.title } });
+            }
+          };
           return (
             <ListItem
               key={item.node.id}
               secondaryAction={
                 <>
-                  <IconButton edge="end" aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
                   <IconButton
                     edge="end"
                     aria-label="edit"
-                    sx={{ marginLeft: "20px" }}
+                    type="submit"
+                    onClick={onClickEdit}
                   >
                     <EditIcon />
                   </IconButton>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    sx={{ marginLeft: "20px" }}
+                    onClick={onClickDelete}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </>
               }
-              disablePadding
             >
               <ListItemButton dense>
                 <ListItemIcon>
@@ -66,7 +99,15 @@ export default function ToDoList() {
                     inputProps={{ "aria-labelledby": labelId }}
                   />
                 </ListItemIcon>
-                <ListItemText id={labelId} primary={`${item.node.title}`} />
+                <ListItemText id={labelId}>
+                  <TextField
+                    fullWidth
+                    multiline
+                    variant="standard"
+                    defaultValue={item.node.title}
+                    onChange={onChange}
+                  />
+                </ListItemText>
               </ListItemButton>
             </ListItem>
           );
