@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
-import InputField from "./InputField";
-import ToDoList from "./ToDoList";
+import InputField from "../InputField";
+import ToDoList from "../TodoList";
 
 export default function ToDoCard() {
   return (

@@ -8,9 +8,14 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useMutation, useQuery } from "@apollo/client";
-import { GET_ALL_ITEMS, DELETE_ITEM, EDIT_ITEM } from "./graphql";
 import { TextField } from "@mui/material";
+import Error from "../Error";
+
+//-----------------------------------------------------------------------------
+import { useMutation, useQuery } from "@apollo/client";
+import GET_ALL_ITEMS from "../../graphql/getAllTodos";
+import EDIT_ITEM from "../../graphql/updateTodo";
+import DELETE_ITEM from "../../graphql/deleteTodo";
 
 export default function ToDoList() {
   const [form, setForm] = React.useState({
@@ -34,8 +39,9 @@ export default function ToDoList() {
   const { loading, error, data } = useQuery(GET_ALL_ITEMS);
   const [checked, setChecked] = React.useState([0]);
 
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
+  //if (loading) return "Loading...";
+
+  if (error) return <Error>{error.message}</Error>;
 
   const handleToggle = (value: any) => () => {
     const currentIndex = checked.indexOf(value);
@@ -50,21 +56,21 @@ export default function ToDoList() {
     setChecked(newChecked);
   };
 
+  const onClickDelete = (item: any) =>
+    deleteItem({ variables: { id: item.node.id } });
+
+  const onClickEdit = (e: any, item: any) => {
+    e.preventDefault();
+    if (form.title !== "") {
+      editItem({ variables: { id: item.node.id, title: form.title } });
+    }
+  };
   if (data) {
     return (
       <List sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}>
         {data.todoItems.edges.map((item: any) => {
           const labelId = `checkbox-list-label-${item.node.title}`;
 
-          const onClickDelete = () =>
-            deleteItem({ variables: { id: item.node.id } });
-
-          const onClickEdit = (e: any) => {
-            e.preventDefault();
-            if (form.title !== "") {
-              editItem({ variables: { id: item.node.id, title: form.title } });
-            }
-          };
           return (
             <ListItem
               key={item.node.id}
@@ -74,7 +80,7 @@ export default function ToDoList() {
                     edge="end"
                     aria-label="edit"
                     type="submit"
-                    onClick={onClickEdit}
+                    onClick={(e) => onClickEdit(e, item)}
                   >
                     <EditIcon />
                   </IconButton>
@@ -82,7 +88,7 @@ export default function ToDoList() {
                     edge="end"
                     aria-label="delete"
                     sx={{ marginLeft: "20px" }}
-                    onClick={onClickDelete}
+                    onClick={(e) => onClickDelete(item)}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -115,4 +121,5 @@ export default function ToDoList() {
       </List>
     );
   }
+  return <></>;
 }

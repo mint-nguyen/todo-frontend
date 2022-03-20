@@ -1,14 +1,17 @@
 import * as React from "react";
+import { useState } from "react";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import Error from "../Error";
+
+//-----------------------------------------------------------------------------
 import { useMutation } from "@apollo/client";
-import { CREATE_TO_DO } from "./graphql";
-import { useState } from "react";
-import { GET_ALL_ITEMS } from "../ToDoList/graphql";
+import CREATE_TO_DO from "../../graphql/createTodo";
+import GET_ALL_ITEMS from "../../graphql/getAllTodos";
 
 export default function InputField() {
   const [formState, setFormState] = useState({
@@ -20,7 +23,7 @@ export default function InputField() {
     refetchQueries: [GET_ALL_ITEMS, "getAllItemsSortID"],
   });
 
-  if (error) return `Submission error! ${error.message}`;
+  if (error) return <Error> {`Submission error! ${error!.message}`}</Error>;
 
   const onClickCheck = (e: any) => {
     e.preventDefault();
