@@ -8,9 +8,14 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useMutation, useQuery } from "@apollo/client";
-import { GET_ALL_ITEMS, DELETE_ITEM, EDIT_ITEM } from "./graphql";
 import { TextField } from "@mui/material";
+import Error from "../Error";
+
+//-----------------------------------------------------------------------------
+import { useMutation, useQuery } from "@apollo/client";
+import GET_ALL_ITEMS from "../../graphql/getAllTodos";
+import EDIT_ITEM from "../../graphql/updateTodo";
+import DELETE_ITEM from "../../graphql/deleteTodo";
 
 export default function ToDoList() {
   const [form, setForm] = React.useState({
@@ -34,8 +39,9 @@ export default function ToDoList() {
   const { loading, error, data } = useQuery(GET_ALL_ITEMS);
   const [checked, setChecked] = React.useState([0]);
 
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
+  //if (loading) return "Loading...";
+
+  if (error) return <Error>{error.message}</Error>;
 
   const handleToggle = (value: any) => () => {
     const currentIndex = checked.indexOf(value);
@@ -115,4 +121,5 @@ export default function ToDoList() {
       </List>
     );
   }
+  return <></>;
 }

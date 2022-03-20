@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+import "../src/styles/globals.css";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import * as React from "react";
 

@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
-import styles from "../styles/Home.module.css";
-import Footer from "../components/Footer";
-import ToDoCard from "../components/ToDoCard";
-import NextHead from "../components/Head";
+import styles from "../src/styles/Home.module.css";
+import Footer from "../src/components/Footer";
+import ToDoCard from "../src/components/TodoCard";
+import NextHead from "../src/components/Head";
 
 const Home: NextPage = () => {
   return (
