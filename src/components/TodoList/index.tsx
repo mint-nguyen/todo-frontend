@@ -56,21 +56,21 @@ export default function ToDoList() {
     setChecked(newChecked);
   };
 
+  const onClickDelete = (item: any) =>
+    deleteItem({ variables: { id: item.node.id } });
+
+  const onClickEdit = (e: any, item: any) => {
+    e.preventDefault();
+    if (form.title !== "") {
+      editItem({ variables: { id: item.node.id, title: form.title } });
+    }
+  };
   if (data) {
     return (
       <List sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}>
         {data.todoItems.edges.map((item: any) => {
           const labelId = `checkbox-list-label-${item.node.title}`;
 
-          const onClickDelete = () =>
-            deleteItem({ variables: { id: item.node.id } });
-
-          const onClickEdit = (e: any) => {
-            e.preventDefault();
-            if (form.title !== "") {
-              editItem({ variables: { id: item.node.id, title: form.title } });
-            }
-          };
           return (
             <ListItem
               key={item.node.id}
@@ -80,7 +80,7 @@ export default function ToDoList() {
                     edge="end"
                     aria-label="edit"
                     type="submit"
-                    onClick={onClickEdit}
+                    onClick={(e) => onClickEdit(e, item)}
                   >
                     <EditIcon />
                   </IconButton>
@@ -88,7 +88,7 @@ export default function ToDoList() {
                     edge="end"
                     aria-label="delete"
                     sx={{ marginLeft: "20px" }}
-                    onClick={onClickDelete}
+                    onClick={(e) => onClickDelete(item)}
                   >
                     <DeleteIcon />
                   </IconButton>
