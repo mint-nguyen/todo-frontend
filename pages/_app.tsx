@@ -3,7 +3,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import * as React from "react";
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
+  uri: "https://us-central1-todo-backend-mintng.cloudfunctions.net/api/graphql",
   cache: new InMemoryCache(),
 });
 
